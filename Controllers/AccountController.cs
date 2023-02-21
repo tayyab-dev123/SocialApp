@@ -18,21 +18,43 @@ namespace SocialApp.Controllers
             _context = context;
         }
         [HttpPost("Register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<AppUser>> Register(RegisterDTO registerDTO)
         {
-            if(await UserExists(registerDto.UserName)) return BadRequest("Username Already Taken!");
+            if (await UserExists(registerDTO.UserName)) return BadRequest("Username Already Taken!");
             using var hmac = new HMACSHA512();
             var user = new AppUser
             {
-                UserName = registerDto.UserName.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+                UserName = registerDTO.UserName.ToLower(),
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
                 PasswordSalt = hmac.Key
             };
             _context.Add(user);
             await _context.SaveChangesAsync();
             return user;
         }
-        private async Task<bool> UserExists(string username){
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<AppUser>> Login(LoginDTO loginDTO)
+        {
+
+            var registeredUser = await _context.Users.SingleOrDefaultAsync(user => user.UserName == loginDTO.UserName);
+            if (registeredUser == null) Unauthorized("User not exists");
+
+            using var hmacKey = new HMACSHA512(registeredUser.PasswordSalt);
+
+            var LoginComputeHash = hmacKey.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
+
+            for (int i = 0; i < LoginComputeHash.Length; i++)
+            {
+                if (LoginComputeHash[i] != registeredUser.PasswordHash[i]) return Unauthorized("Password not matched");
+            }
+
+            return registeredUser;
+
+
+        }
+        private async Task<bool> UserExists(string username)
+        {
             return await _context.Users.AnyAsync(u => u.UserName == username.ToLower());
         }
 
