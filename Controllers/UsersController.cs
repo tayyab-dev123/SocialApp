@@ -6,9 +6,8 @@ using SocialApp.Entities;
 
 namespace SocialApp.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+
+    public class UsersController : BaseController
     {
         private readonly DataContext _context;
         public UsersController(DataContext context)
@@ -17,16 +16,16 @@ namespace SocialApp.Controllers
         }
 
         [HttpGet]
-        public async Task <ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await _context.Users.ToArrayAsync();
         }
-     
+
         [HttpGet("id")]
-        public async Task <ActionResult<AppUser>> GetUser(int id)
+        public async Task<ActionResult<AppUser>> GetUser(int id)
         {
             return await _context.Users.FindAsync(id);
         }
-     
+
     }
 }
