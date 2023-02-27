@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using SocialApp;
 using SocialApp.Data;
 using SocialApp.Interfaces;
+using SocialApp.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,12 +63,17 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
