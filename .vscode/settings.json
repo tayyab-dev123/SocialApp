@@ -1,3 +1,6 @@
 {
-    "angular.log": "verbose"
+    "angular.log": "verbose",
+    "dataworkspace.excludedProjects": [
+        "MSSQLLocalDB/(localdb)/MSSQLLocalDB.sqlproj"
+    ]
 }

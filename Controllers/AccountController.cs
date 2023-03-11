@@ -40,6 +40,7 @@ namespace SocialApp.Controllers
             };
         }
 
+
         [HttpPost("Login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
