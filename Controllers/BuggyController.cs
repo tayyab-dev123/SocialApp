@@ -30,7 +30,6 @@ namespace SocialApp.Controllers
             var things = _Context.Users.Find(-1);
             if(things==null) return NotFound();
             return Ok(things);
-
         }
         [HttpGet("server-error")]
         public ActionResult<string> GetServerError()

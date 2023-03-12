@@ -29,6 +29,5 @@ namespace SocialApp.Controllers
         {
             return await _context.Users.FindAsync(id);
         }
-
     }
 }

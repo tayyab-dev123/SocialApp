@@ -11,7 +11,6 @@ namespace SocialApp.Controllers
 {
     public class AccountController : BaseController
     {
-
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
 
@@ -40,17 +39,15 @@ namespace SocialApp.Controllers
             };
         }
 
-
         [HttpPost("Login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
-
             var registeredUser = await _context.Users.SingleOrDefaultAsync(user => user.UserName == loginDTO.UserName);
             if (registeredUser == null) Unauthorized("User not exists");
 
             using var hmacKey = new HMACSHA512(registeredUser.PasswordSalt);
 
-            var LoginComputeHash = hmacKey.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
+          var LoginComputeHash = hmacKey.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
             for (int i = 0; i < LoginComputeHash.Length; i++)
             {
@@ -62,12 +59,10 @@ namespace SocialApp.Controllers
                 UserName = registeredUser.UserName,
                 Token = _tokenService.CreateToken(registeredUser)
             };
-
         }
         private async Task<bool> UserExists(string username)
         {
             return await _context.Users.AnyAsync(u => u.UserName == username.ToLower());
         }
-
     }
 }
