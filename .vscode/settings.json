@@ -1,6 +1,4 @@
 {
-    "angular.log": "verbose",
-    "dataworkspace.excludedProjects": [
-        "MSSQLLocalDB/(localdb)/MSSQLLocalDB.sqlproj"
-    ]
+  "angular.log": "verbose",
+  "cSpell.words": ["jsonserializer", "readalltextasync"]
 }

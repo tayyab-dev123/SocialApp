@@ -20,18 +20,22 @@ namespace SocialApp.Controllers
             _context = context;
         }
         [HttpPost("Register")]
-        public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
+        public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDto)
         {
-            if (await UserExists(registerDTO.UserName)) return BadRequest("Username Already Taken!");
+            if (await UserExists(registerDto.UserName)) return BadRequest("Username is taken");
+
             using var hmac = new HMACSHA512();
+
             var user = new AppUser
             {
-                UserName = registerDTO.UserName.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
+                UserName = registerDto.UserName.ToLower(),
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
-            _context.Add(user);
+
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
             return new UserDTO
             {
                 UserName = user.UserName,
