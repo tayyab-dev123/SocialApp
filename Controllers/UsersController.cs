@@ -7,6 +7,7 @@ using SocialApp.Entities;
 
 namespace SocialApp.Controllers
 {
+    [Authorize]
     public class UsersController : BaseController
     {
         private readonly DataContext _context;
@@ -16,14 +17,12 @@ namespace SocialApp.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await _context.Users.ToArrayAsync();
         }
 
-         [Authorize]
         [HttpGet("id")]
         public async Task<ActionResult<AppUser>> GetUser(int id)
         {
