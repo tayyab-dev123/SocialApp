@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using SocialApp.DTOs;
 using SocialApp.Entities;
 using SocialApp.Interfaces;
 
@@ -7,12 +10,26 @@ namespace SocialApp.Data
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-         async Task<AppUser> IUserRepository.GetUserByIdAsync(int id)
+
+        public async Task<MemberDTO> GetMemberByUsernameAsync(string username)
+        {
+            return await _context.Users.Where(u => u.UserName == username)
+                .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<MemberDTO>> GetMembersAsync()
+        {
+            return await _context.Users.ProjectTo<MemberDTO>(_mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        async Task<AppUser> IUserRepository.GetUserByIdAsync(int id)
         {
             return await _context.Users.FindAsync(id);
         }

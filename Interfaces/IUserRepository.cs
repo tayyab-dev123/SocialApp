@@ -1,3 +1,4 @@
+using SocialApp.DTOs;
 using SocialApp.Entities;
 
 namespace SocialApp.Interfaces
@@ -9,5 +10,7 @@ namespace SocialApp.Interfaces
         Task<IEnumerable<AppUser>> GetUsersAsync();
         Task<AppUser> GetUserByIdAsync(int id);
         Task<AppUser> GetUserByNameAsync(string UserName);
+        Task<IEnumerable<MemberDTO>> GetMembersAsync();
+        Task<MemberDTO> GetMemberByUsernameAsync(string username);
     }
 }
